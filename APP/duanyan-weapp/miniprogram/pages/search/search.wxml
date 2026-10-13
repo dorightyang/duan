@@ -1,0 +1,141 @@
+<import src="../../templates/back-to-top.wxml" />
+<view class="page">
+  <view class="searchbar">
+    <input
+      id="kw"
+      class="input"
+      value="{{keyword}}"
+      placeholder="搜关键词，如：本分、平常心、做对的事情"
+      placeholder-class="ph"
+      confirm-type="search"
+      bindinput="onInput"
+      bindconfirm="onConfirm"
+    />
+    <text class="clear" id="clear" wx:if="{{keyword}}" bindtap="onTapClear">清空</text>
+  </view>
+
+  <text class="notice" id="notice">结果可能存在错漏或不准确。</text>
+
+  <view class="filters" wx:if="{{searched}}">
+    <view class="filter-row">
+      <text class="filter-label">排序</text>
+      <text
+        class="chip {{sort === item.key ? 'chip-on' : ''}}"
+        wx:for="{{sortOptions}}"
+        wx:key="key"
+        id="sort-{{item.key}}"
+        data-key="{{item.key}}"
+        bindtap="onTapSort"
+      >{{item.label}}</text>
+    </view>
+    <view class="filter-row" wx:if="{{people.length}}">
+      <text class="filter-label">发言人</text>
+      <text class="chip {{personId === '' ? 'chip-on' : ''}}" id="person-all" data-id="" bindtap="onTapPerson">全部</text>
+      <text
+        class="chip {{personId === item.person_id ? 'chip-on' : ''}}"
+        wx:for="{{people}}"
+        wx:key="person_id"
+        id="person-{{item.person_id}}"
+        data-id="{{item.person_id}}"
+        bindtap="onTapPerson"
+      >{{item.name}}</text>
+    </view>
+  </view>
+
+  <view class="hot" wx:if="{{!searched}}">
+    <view class="topics" wx:if="{{topics.length}}">
+      <text class="hot-label">专题</text>
+      <view
+        class="topic-row card"
+        wx:for="{{topics}}"
+        wx:key="topic_id"
+        id="topic-{{item.topic_id}}"
+        data-topic="{{item.topic_id}}"
+        bindtap="onTapTopic"
+      >
+        <text class="topic-title">{{item.title}}</text>
+        <text class="topic-desc">{{item.item_count}} 条核验原文</text>
+      </view>
+    </view>
+    <text class="hot-label">常用关键词</text>
+    <view class="chips">
+      <text
+        class="chip"
+        wx:for="{{hotWords}}"
+        wx:key="*this"
+        id="chip-{{index}}"
+        data-word="{{item}}"
+        bindtap="onTapHot"
+      >{{item}}</text>
+    </view>
+    <view class="topic-row card" id="about-entry" bindtap="onTapAbout">
+      <text class="topic-title">关于段言</text>
+    </view>
+  </view>
+
+  <view class="summary" wx:if="{{searched && !loading}}">
+    <text id="result-count">{{summary}}</text>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">检索中……</view>
+
+  <view class="empty" wx:if="{{searched && !loading && error}}" id="error">
+    <text>{{error}}</text>
+  </view>
+
+  <view class="results" wx:if="{{!loading}}">
+    <view
+      class="card result"
+      wx:for="{{results}}"
+      wx:key="id"
+      id="result-{{index}}"
+      data-index="{{index}}"
+      bindtap="onTapResult"
+    >
+      <view class="result-head">
+      <text class="tag">{{item.speakerLabel}}</text>
+        <text class="tag" wx:if="{{item.matchLabel}}">{{item.matchLabel}}</text>
+        <!-- 一屏只看得到第一处命中，剩下的在卡片里看不到 → 直接报个数 -->
+        <text class="tag" wx:if="{{item.hitCount > 1}}">命中 {{item.hitCount}} 处</text>
+      </view>
+      <!-- 他在回答什么：网友的提问只做上下文，字号/颜色都比正文弱一档，限两行 -->
+      <view class="q" wx:if="{{item.question}}">
+        <view class="q-inner">
+          <text class="q-label">{{item.question.label}}</text><text class="q-sep">：</text><text class="q-text"><text
+            wx:for="{{item.question.runs}}"
+            wx:for-item="qseg"
+            wx:for-index="qIndex"
+            wx:key="qIndex"
+            class="{{qseg.bold ? 'bd' : ''}}"
+          >{{qseg.text}}</text></text>
+        </view>
+      </view>
+      <text class="prose"><text
+        wx:for="{{item.runs}}"
+        wx:for-item="seg"
+        wx:for-index="segIndex"
+        wx:key="segIndex"
+        class="{{seg.highlight ? 'hl' : ''}}{{seg.bold ? 'bd' : ''}}"
+      >{{seg.text}}</text></text>
+      <text class="meta result-meta">{{item.sourceLine}}</text>
+      <text class="result-title" wx:if="{{item.title}}">{{item.title}}</text>
+      <text class="warn" wx:for="{{item.warnings}}" wx:key="*this">· {{item}}</text>
+    </view>
+  </view>
+
+  <view class="more" id="more" wx:if="{{searched && !loading && hasMore}}" bindtap="onTapMore">
+    <text>{{loadingMore ? '加载中……' : '加载更多'}}</text>
+  </view>
+  <view class="more-note" id="more-note" wx:if="{{searched && !loading && capped}}">
+    <text>已显示前 {{resultCount}} 条（共 {{total}} 条）。再加一个词，或换「最新/最早」排，会更容易找。</text>
+  </view>
+  <view class="more-note" wx:if="{{searched && !loading && !hasMore && !capped && resultCount >= 20}}">
+    <text>已显示全部 {{resultCount}} 条。</text>
+  </view>
+
+  <view class="empty" wx:if="{{searched && !loading && !error && resultCount === 0}}" id="empty">
+    <text>没有命中「{{keyword}}」。换个说法，或切到「相关」试试。</text>
+  </view>
+
+  <template is="back-to-top" wx:if="{{showToTop}}" />
+</view>

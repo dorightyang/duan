@@ -1,0 +1,15 @@
+.head { padding: var(--pad-card); display: flex; flex-direction: column; }
+.head-title { display: block; font-size: var(--fs-title); line-height: var(--lh-title); font-weight: 600; color: var(--text-1); }
+.head-sub { display: block; margin-top: var(--s-2); font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--text-2); }
+.head-note { display: block; margin-top: var(--s-1); font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--text-4); }
+
+.items { margin-top: var(--s-3); display: flex; flex-direction: column; gap: var(--card-gap); }
+.item { padding: var(--pad-card); display: flex; flex-direction: column; }
+.item-head { display: flex; align-items: center; gap: var(--s-2); margin-bottom: var(--s-2); }
+.item-no { font-variant-numeric: tabular-nums; }
+.item-text { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--text-1); white-space: pre-wrap; }
+.item-meta { margin-top: var(--s-3); }
+
+.loading { margin-top: var(--s-8); text-align: center; color: var(--text-4); font-size: var(--fs-label); }
+.empty { margin-top: var(--s-8); text-align: center; color: var(--text-4); font-size: var(--fs-label); }
+.end { text-align: center; padding: var(--s-5) 0 var(--s-2); font-size: var(--fs-meta); color: var(--text-4); }

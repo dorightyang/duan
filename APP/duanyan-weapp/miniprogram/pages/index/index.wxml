@@ -1,0 +1,61 @@
+<!-- 首页两档版式（2026-10-04 用户在"现状 vs 方案一"对比图上分别勾了短句和长句两版）：
+       <60 字  短句：40rpx，**贴底 + 海报整张留着**（左上角打勾那版，湖面倒影不遮）；
+       >=60 字 长句：32rpx，**整页居中 + 背景在 27% 处退出文字区**（右下角打勾那版）。
+     不再需要第三档：`utils/quote.js` 的 HERO_MAX_CHARS=180 已经在取值时把「今日一条」
+     限制在长句档能安全承载的长度内（超过就截断补省略号，点进去仍是完整原文）。
+     60 字这条线是照用户已认可的"短句效果"反推的：那句 45 字（3 行）走短句那套。 -->
+<view class="page {{quote && quote.text.length >= 60 ? 'quote-long' : ''}}">
+  <!-- 海报底图：ChatGPT Pro 按 logo 的画风画的（深蓝夜空 + 暖金月亮 + 湖面倒影），
+       经压缩后入库；只是背景画，不参与排版。上面压一层暗罩，保证正文在任何亮度上都读得清。 -->
+  <image class="hero-bg" id="hero-bg" wx:if="{{quote}}" src="/assets/hero.jpg" mode="aspectFill" />
+  <view class="scrim" wx:if="{{quote}}"></view>
+
+  <!-- 方案 A：整页就只有这一句话，在整页里上下居中当海报；页内不再重复品牌（导航栏已有「段言」）。
+       两个手势：短按进原文页；长按复制「原文 + 出处」并提示「已复制」（用户 2026-10-06 需求）。
+       微信规则：同一次触摸里触发了 longpress，就不再触发 tap —— 所以长按不会顺带跳进原文页。 -->
+  <view class="hero-quote" id="quote-card" wx:if="{{quote}}" bindtap="onTapQuote" bindlongpress="onLongPressQuote">
+    <text class="quote-text" id="quote-text"><text
+      wx:for="{{quote.runs}}"
+      wx:for-item="seg"
+      wx:for-index="segIndex"
+      wx:key="segIndex"
+      class="{{seg.bold ? 'bd' : ''}}"
+    >{{seg.text}}</text></text>
+    <view class="quote-meta">
+      <text class="meta quote-src" id="quote-meta">{{quoteSourceTop}}</text>
+      <text class="meta quote-date" id="quote-meta-bottom" wx:if="{{quoteSourceBottom}}">{{quoteSourceBottom}}</text>
+    </view>
+  </view>
+
+  <view class="hero-quote" wx:if="{{quoteError}}">
+    <text class="quote-text muted">{{quoteError}}</text>
+  </view>
+</view>
+
+<!-- 首页只有一个动作：检索。固定在底部、拇指够得着；
+     长相用方案 C 的搜索框（深色圆角 + 金色放大镜 + 提示文字），点一下进搜索页（那里是能打字的真输入框）。 -->
+<view class="search-bar" id="search-bar">
+  <!-- 「换一句」：搜索框上方右侧、短句/长句两版式共用同一位置（ChatGPT Pro 方案，用户 2026-10-06 认可）。
+       三个热区互相隔离：点正文 = 进原文页；点这里 = 只换内容；点搜索框 = 进搜索页。
+       候选来自一份逐条核过的小清单（data/hero-quotes.js），点击零请求；
+       清单里就这几条 —— 发完就收起入口，不循环、不补池、不再看一轮（2026-10-06，见 TASK §3.40）。 -->
+  <view class="change-row" wx:if="{{showChange}}">
+    <view
+      class="change-btn"
+      id="change-quote"
+      bindtap="onTapChangeQuote"
+      hover-class="change-btn-hover"
+      hover-stay-time="80"
+    >
+      <view class="change-ico"></view>
+      <text class="change-text" id="change-label">换一句</text>
+    </view>
+  </view>
+  <view class="search-box" id="entry-search" bindtap="onTapSearch" hover-class="search-box-hover" hover-stay-time="80">
+    <view class="search-ico" id="search-icon">
+      <view class="glass"></view>
+      <view class="glass-handle"></view>
+    </view>
+    <text class="search-ph" id="search-label">搜一个词或一句原话</text>
+  </view>
+</view>

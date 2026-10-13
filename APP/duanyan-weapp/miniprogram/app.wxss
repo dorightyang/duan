@@ -1,0 +1,176 @@
+/* 设计 token（改配色/排版只动这一块）。
+   方案来源：把 6 页截图交给 ChatGPT Pro 审阅后给出的色彩与排版规范。 */
+page {
+  /* ---- 颜色 ---- */
+  --bg: #0b1526;              /* 页面底 */
+  --card: #142135;            /* 卡片底 */
+  --card-2: #1b2a40;          /* 次级容器：搜索框、上下文面板 */
+  --line: #2a384e;            /* 卡片描边 / 分隔线（中性，不再默认金边） */
+  --line-weak: #2a384e;
+  --line-faint: rgba(42, 56, 78, 0.7);
+  --line-input: #62748f;      /* 输入控件描边 */
+  --line-chip: #2a384e;
+  --wash: rgba(178, 190, 208, 0.12); /* 中性标签底 */
+
+  --gold: #d5b16b;            /* 强调：当前操作 / 检索命中 / 品牌文字 */
+  --gold-soft: #d5b16b;
+  --gold-wash: #2d2a23;       /* 强调底（小面积） */
+  --gold-line: #2a384e;
+  --gold-line-strong: #d5b16b;
+  --gold-ring: #d5b16b;
+  --on-gold: #0b1526;         /* 金底上的文字 */
+
+  --text-1: #e7edf5;          /* 一级：原文、标题、统计数字 */
+  --text-2: #b2bed0;          /* 二级：说话人、普通链接、辅助说明 */
+  --text-3: #b2bed0;
+  --text-4: #909fb5;          /* 三级：来源、日期、页码、数量说明 */
+  --text-badge: #b2bed0;
+  --text-ctx: #e7edf5;
+  --text-ctx-dim: #b2bed0;
+
+  --btn: #1b2a40;             /* 次级按钮底 */
+  --warn: #dbaa7a;
+  --shadow: none;             /* 普通卡片不投影 */
+  --shadow-overlay: 0 12rpx 32rpx rgba(0, 0, 0, 0.24);
+
+  /* ---- 字号 / 行高 ---- */
+  --fs-meta: 26rpx;
+  --fs-label: 28rpx;
+  --fs-ui: 30rpx;
+  --fs-body: 32rpx;
+  --fs-title: 36rpx;
+  --fs-brand: 40rpx;
+  --lh-meta: 1.5;
+  --lh-body: 1.75;
+  --lh-quote: 1.65;
+  --lh-title: 1.4;
+
+  /* ---- 间距（8rpx 网格） ---- */
+  --s-1: 8rpx;
+  --s-2: 16rpx;
+  --s-3: 24rpx;
+  --s-4: 32rpx;
+  --s-5: 40rpx;
+  --s-6: 48rpx;
+  --s-8: 64rpx;
+  --page-padding: 32rpx;
+  --pad-card: 32rpx;
+  --card-gap: 24rpx;
+
+  /* ---- 形状 / 控件 ---- */
+  --radius: 24rpx;
+  --radius-control: 20rpx;
+  --radius-tag: 12rpx;
+  --radius-pill: 999rpx;
+  --control-height: 88rpx;
+
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: var(--fs-ui);
+  line-height: 1.7;
+}
+
+.page {
+  padding: var(--s-3) var(--page-padding) var(--s-6);
+}
+
+.card {
+  box-sizing: border-box;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* 原文正文（搜索结果 / 原文页 / 专题 / 上下文共用一套） */
+.prose {
+  display: block;
+  color: var(--text-1);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  text-align: left;
+  text-indent: 0;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* 命中高亮：只改颜色，字号/字重都 inherit（不放大、不加粗） */
+.hl { color: var(--gold); font-size: inherit; font-weight: inherit; }
+
+/* 原文自带的 **强调**：收细到 500，不整段变粗 */
+.prose .bd,
+.bd { font-weight: 500; }
+
+.meta {
+  display: block;
+  color: var(--text-4);
+  font-size: var(--fs-meta);
+  font-weight: 400;
+  line-height: var(--lh-meta);
+  text-align: left;
+}
+
+.tag {
+  display: inline-block;
+  font-size: var(--fs-meta);
+  line-height: var(--lh-meta);
+  padding: 2rpx 16rpx;
+  border-radius: var(--radius-tag);
+  background: var(--wash);
+  color: var(--text-badge);
+}
+
+.muted {
+  color: var(--text-4);
+}
+
+.gold {
+  color: var(--gold);
+}
+
+/* 回到顶部：滚过一屏后出现在右下角，点一下回页顶。
+   搜索结果 / 原文 / 专题共用（标记在 templates/back-to-top.wxml）。 */
+.topper {
+  position: fixed;
+  right: var(--s-4);
+  bottom: calc(var(--s-5) + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 88rpx;
+  height: 88rpx;
+  /* 触控下限：320px 窄屏上 88rpx 只折合 37.5px，用 px 兜住 */
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-overlay);
+}
+.topper-hover { border-color: var(--gold); }
+
+.topper-ico { position: relative; width: 36rpx; height: 36rpx; }
+.topper-stem {
+  position: absolute;
+  left: 16rpx;
+  top: 4rpx;
+  width: 4rpx;
+  height: 26rpx;
+  background: var(--gold);
+  border-radius: 2rpx;
+}
+.topper-head {
+  position: absolute;
+  left: 9rpx;
+  top: 8rpx;
+  width: 18rpx;
+  height: 18rpx;
+  border-top: 4rpx solid var(--gold);
+  border-left: 4rpx solid var(--gold);
+  transform: rotate(45deg);
+}

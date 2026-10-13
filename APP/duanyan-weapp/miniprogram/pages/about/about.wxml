@@ -1,0 +1,38 @@
+<view class="page about">
+  <image class="logo" src="/assets/logo.png" mode="aspectFit" />
+  <text class="name">段言</text>
+  <text class="sub">做对的事情，把事情做对</text>
+
+  <view class="card block">
+    <text class="block-title">它是什么</text>
+    <text class="block-text">段，是段永平（系）；言，是他（们）说过的话。</text>
+  </view>
+
+  <view class="card block">
+    <text class="block-title">愿景</text>
+    <text class="block-text">学习段永平理念，大家一起做最幸福的人！</text>
+  </view>
+
+  <view class="card block" wx:if="{{people.length}}">
+    <text class="block-title">收录的人物（段永平系）</text>
+    <view class="person" wx:for="{{people}}" wx:key="person_id">
+      <text class="person-name">{{item.name}}</text>
+      <text class="person-count">{{item.segments}} 条原话 · {{item.documents}} 篇</text>
+    </view>
+  </view>
+
+  <view class="card block" wx:if="{{sources.length}}">
+    <text class="block-title">数据来源</text>
+    <view class="person" wx:for="{{sources}}" wx:key="name">
+      <text class="person-name">{{item.name}}</text>
+      <text class="person-count">{{item.documents}} 篇</text>
+    </view>
+  </view>
+
+  <view class="card block" wx:if="{{error}}">
+    <text class="block-title">读取失败</text>
+    <text class="block-text">{{error}}</text>
+  </view>
+
+  <text class="footnote">内容仅供学习与检索，原文版权归原作者所有。</text>
+</view>

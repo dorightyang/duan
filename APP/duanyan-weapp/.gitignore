@@ -1,0 +1,5 @@
+node_modules/
+.tmp/
+.secrets/
+*.key
+project.private.config.json

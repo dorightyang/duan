@@ -1,0 +1,41 @@
+.head { padding: var(--pad-card); display: flex; flex-direction: column; }
+.head-title {
+  display: block;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: 600;
+  color: var(--text-1);
+}
+.head-tags { margin-top: var(--s-3); display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.head-links { margin-top: var(--s-3); display: flex; gap: var(--s-5); }
+.link { font-size: var(--fs-label); color: var(--text-2); text-decoration: underline; }
+.warn { margin-top: var(--s-2); font-size: var(--fs-meta); color: var(--warn); }
+
+.blocks { margin-top: var(--s-3); display: flex; flex-direction: column; gap: var(--card-gap); }
+.block { display: flex; flex-direction: column; }
+/* 一段一卡的体裁：卡片自己带内边距 */
+.card.block { padding: var(--pad-card); }
+
+/* 访谈/演讲转录稿：整篇一张卡，按一篇文章排。
+   旧布局一段一卡（--card-gap 24rpx + 每段上下 padding 各 32rpx）段间视觉空隙 ~88rpx，
+   一屏放不下几轮对话；这里段间只留 --s-2(16rpx)，说话人写在段首加粗。 */
+.article { padding: var(--pad-card); }
+.article .para { display: block; }
+.article .para + .para { margin-top: var(--s-2); }
+.para-speaker { font-weight: 600; color: var(--text-1); }
+.para-sep { color: var(--text-4); }
+/* 对话里非本人的那半句（王石/田朴珺…）压一级亮度，本人的话仍是正文最亮 */
+.para-context .prose { color: var(--text-2); }
+.article .para.block-hit { padding-left: var(--s-2); }
+.block-context { background: var(--card-2); }
+/* 当前定位段：仅左侧 4rpx 金线，不贯穿整篇 */
+.block-hit { border-left: 4rpx solid var(--gold); }
+.block-head { display: flex; align-items: center; gap: var(--s-2); margin-bottom: var(--s-2); }
+.block-speaker { font-size: var(--fs-label); font-weight: 500; line-height: var(--lh-meta); color: var(--text-2); }
+.block-time { font-size: var(--fs-meta); color: var(--text-4); }
+
+.load-more { text-align: center; padding: var(--s-3); font-size: var(--fs-label); color: var(--gold); }
+.end { text-align: center; padding: var(--s-3); font-size: var(--fs-meta); color: var(--text-4); }
+
+.loading { margin-top: var(--s-8); text-align: center; color: var(--text-4); font-size: var(--fs-label); }
+.empty { margin-top: var(--s-8); text-align: center; color: var(--text-4); font-size: var(--fs-label); }

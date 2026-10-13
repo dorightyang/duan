@@ -1,0 +1,199 @@
+/* 首页 = 一张海报：整页只有「今天的原文」，页内不再放品牌区（导航栏已有「段言」）、
+   不做卡片（无边框无底色）；底部只留一个检索入口。
+   2026-10-04 用户在同一张"现状 vs 方案一"对比图上分别给两版打了勾，**短句和长句走两套风格**：
+     · 短句（<60 字）→ 左上角打勾那版：**贴底 + 海报整张留着**（湖面倒影不遮）；
+     · 长句（>=60 字）→ 右下角打勾那版（方案一）：**整页居中 + 背景退出文字区**。
+   所以下面 .page 的默认（无修饰类）= 短句那套，.page.quote-long 覆盖成长句那套。
+   （不再有第三档：取值时已按 `HERO_MAX_CHARS` 截断，见 utils/quote.js。） */
+.page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* 「换一句」操作区的高度（88rpx 热区 + 16rpx 到搜索框的间距）。它长在底部检索条里，
+     会把检索条整体往上顶，所以海报这边的底边留白要同步加这么多，短句贴底那条基线才不动。 */
+  --change-row-h: 104rpx;
+  /* 短句：文字块贴着底部那条基线往上长（字越多越往上顶，底边不动），海报整张留在文字上方。
+     底边落在距检索条 9vh 处（再叠 --s-5 + --s-3 的固定内边距）—— 这是用户 2026-10-03
+     在截图上圈出来、并在 2026-10-04 打勾确认的那一版。 */
+  justify-content: flex-end;
+  /* 正文左右边界 48rpx，与底部检索框对齐成同一条竖向边界线（复审 P1）。 */
+  padding: var(--s-6) 48rpx;
+  padding-bottom: calc(
+    var(--control-height) + var(--s-5) + var(--s-3) + var(--change-row-h) + 9vh + env(safe-area-inset-bottom)
+  );
+  /* 底图没加载出来时的兜底：极淡的暖光（上）＋冷光（下），不是一块死板的纯色 */
+  background:
+    radial-gradient(130% 46% at 50% -10%, rgba(213, 177, 107, 0.16), rgba(213, 177, 107, 0) 62%),
+    radial-gradient(110% 40% at 50% 108%, rgba(96, 134, 190, 0.1), rgba(96, 134, 190, 0) 68%),
+    var(--bg);
+}
+/* 长句（>=60 字）：取消共同底边，文字块（原文 + 出处）在整页里上下居中，
+   变高时向上下两边分配空间，而不是只往风景里顶（方案一 P0，用户右下角打勾的那版）。 */
+.page.quote-long {
+  justify-content: center;
+  padding-bottom: var(--s-6);
+}
+
+/* 海报底图固定在视口上（长句滚动时背景不跟着跑，也不会露出没图的一截）。
+   z 序：底图 0 < 暗罩 1 < 正文 2 < 底部检索条 3。 */
+.hero-bg { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 0; }
+/* 短句那版的暗罩：只均匀压暗（0.32~0.56），**不收敛成底色** —— 海报整张留着，
+   月亮、山脊、湖面金色倒影都在，文字落在倒影下面那段暗水上（用户打勾的就是这个）。 */
+.scrim {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 21, 38, 0.5),
+    rgba(11, 21, 38, 0.32) 22%,
+    rgba(11, 21, 38, 0.32) 78%,
+    rgba(11, 21, 38, 0.56)
+  );
+}
+
+.hero-quote { display: block; position: relative; z-index: 2; }
+
+/* 长句版式（复审 P1 定的数值）：长文小一档 —— 32rpx / 1.80，
+   看起来是「正文」而不是十行标题；位置由 .page 的居中统一管（见上）。 */
+.page.quote-long .quote-text {
+  font-size: 32rpx;
+  line-height: 1.8;
+}
+/* 长句那版：让背景退出文字区 —— 页高 27% 处收敛为页面底色（= 长句文字块上沿，实测 207px/753px），
+   把山脊/银河/倒影整段让开，十几行正文落在纯底色上。 */
+.page.quote-long .scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(11, 21, 38, 0.34),
+    rgba(11, 21, 38, 0.16) 9%,
+    rgba(11, 21, 38, 0.32) 17%,
+    rgba(11, 21, 38, 0.72) 23%,
+    var(--bg) 27%,
+    var(--bg) 100%
+  );
+}
+.quote-text {
+  display: block;
+  /* 海报字号：比正文（32rpx）和页标题（36rpx）都大一档，短句才有"一屏一句"的分量。
+     复审 P1：字重 500 → 400、行高 1.72 → 1.60 —— 分量靠字号和留白立住，
+     不用中粗字重冒充标题，也不靠降低文字透明度换"轻盈感"。 */
+  font-size: 40rpx;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text-1);
+  text-align: left;
+  white-space: pre-wrap;
+}
+.quote-text.muted { font-size: var(--fs-body); font-weight: 400; line-height: var(--lh-body); color: var(--text-4); }
+/* 复审 P1：出处从"脚注"提升为"阅读信息" —— 说话人/来源用二级色、日期留三级色，
+   正文到出处 24rpx。 */
+.quote-meta { margin-top: var(--s-3); display: flex; flex-direction: column; }
+.quote-meta .meta { font-size: var(--fs-meta); line-height: var(--lh-meta); }
+.quote-src { color: var(--text-2); }
+.quote-date { color: var(--text-4); }
+
+/* 底部检索入口：方案 C 的搜索框长相（深色圆角框 + 金色放大镜 + 提示文字）。
+   行为仍是"点一下进搜索页"——所以它是按钮不是输入框，别让用户以为能就地打字。
+   复审 P2：减重 —— 高 96rpx、圆角 32rpx、底色压到 rgba(20,33,53,.80)、描边弱化到 1px 半透明；
+   左右边界与正文对齐（48rpx），底部只留 安全区 + 24rpx。 */
+.search-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: var(--s-2) 48rpx calc(var(--s-3) + env(safe-area-inset-bottom));
+  /* 短句那版要在检索条这一带**还能看见海报**（打勾的那张就是这样），所以用渐变半透底；
+     长句时底下本来就是收敛后的页面底色，半透与实底看起来一个样，所以不必再分叉
+     （有了 `HERO_MAX_CHARS` 截断，正文不可能长到从这条底下滚过去）。 */
+  background: linear-gradient(180deg, rgba(11, 21, 38, 0.55), rgba(11, 21, 38, 0.92));
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  box-sizing: border-box;
+  width: 100%;
+  height: 96rpx;
+  /* 触控下限：320px 窄屏上 96rpx 只折合 41px，用 px 兜住 */
+  min-height: 48px;
+  padding: 0 var(--s-3);
+  background: rgba(20, 33, 53, 0.8);
+  border: 1px solid rgba(42, 56, 78, 0.6);
+  border-radius: 32rpx;
+}
+.search-box-hover { border-color: var(--gold); }
+.search-ph { font-size: var(--fs-ui); line-height: 1.2; color: var(--text-2); }
+
+/* 「换一句」：搜索框上方右侧，细线环形箭头 + 文字，不做第二个主按钮。
+   热区 176×88rpx（≈ 88×44px），文字 28rpx；位置在两版式里是同一个（都挂在固定底栏上）。 */
+.change-row { display: flex; justify-content: flex-end; }
+.change-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8rpx;
+  box-sizing: border-box;
+  min-width: 176rpx;
+  min-height: 88rpx;
+  padding: 0 var(--s-1);
+  margin-bottom: var(--s-2);
+  border-radius: var(--radius-pill);
+}
+/* 按下反馈：热区里 5% 白，松开即消失（不加常驻底色）。 */
+.change-btn-hover { background: rgba(255, 255, 255, 0.05); }
+.change-text { font-size: 28rpx; line-height: 1.2; color: #9aa6b8; }
+
+/* 环形箭头：一个缺口的圆环 + 一个三角箭头。纯 CSS，不引图片、不加新颜色。 */
+.change-ico { position: relative; flex: none; width: 28rpx; height: 28rpx; }
+.change-ico::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2rpx;
+  box-sizing: border-box;
+  width: 24rpx;
+  height: 24rpx;
+  border: 3rpx solid #8793a6;
+  border-right-color: transparent;
+  border-radius: 50%;
+}
+.change-ico::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 1rpx;
+  border-left: 7rpx solid #8793a6;
+  border-top: 6rpx solid transparent;
+  border-bottom: 6rpx solid transparent;
+  transform: rotate(-32deg);
+}
+
+/* 放大镜：纯 CSS 画（一个圆 + 一根 45° 手柄），不引新图片、不加新颜色 */
+.search-ico { position: relative; flex: none; width: 36rpx; height: 36rpx; }
+.glass {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 26rpx;
+  height: 26rpx;
+  border: 4rpx solid var(--gold);
+  border-radius: 50%;
+}
+.glass-handle {
+  position: absolute;
+  left: 22rpx;
+  top: 20rpx;
+  width: 15rpx;
+  height: 4rpx;
+  background: var(--gold);
+  border-radius: 2rpx;
+  transform-origin: left center;
+  transform: rotate(45deg);
+}

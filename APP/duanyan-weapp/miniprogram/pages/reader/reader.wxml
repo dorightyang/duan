@@ -1,0 +1,82 @@
+<import src="../../templates/back-to-top.wxml" />
+<view class="page">
+  <view class="loading" wx:if="{{loading}}">打开原文……</view>
+
+  <view class="empty" wx:if="{{!loading && error}}" id="reader-error">
+    <text>{{error}}</text>
+  </view>
+
+  <block wx:if="{{!loading && !error && doc}}">
+    <view class="head card">
+      <text class="head-title" id="doc-title">{{header.title}}</text>
+      <view class="head-tags">
+        <text class="tag" wx:if="{{header.publisher}}">{{header.publisher}}</text>
+        <text class="tag">{{header.sourceName}}</text>
+        <text class="tag" wx:if="{{header.tierLabel}}">{{header.tierLabel}}</text>
+        <text class="tag" wx:if="{{header.dateLabel}}">{{header.dateLabel}}</text>
+      </view>
+      <view class="head-links">
+        <text class="link" id="source-link" bindtap="onTapSource" wx:if="{{header.url}}">原文链接</text>
+        <text class="link" id="feedback" bindtap="onTapFeedback">报错/纠错</text>
+      </view>
+      <text class="warn" wx:for="{{header.warnings}}" wx:key="*this">· {{item}}</text>
+      <!-- 话术与后端 kb_qa/duanyan/wording.py 一致：库里只知道「完整/不完整」，不知道缺的是中间还是结尾 -->
+      <text class="warn" wx:if="{{doc.context_completeness !== 'complete' && doc.context_completeness !== 'not_applicable'}}">· 来源可能不完整</text>
+    </view>
+
+    <view class="blocks">
+      <view class="load-more" id="more-before" wx:if="{{hasMoreBefore}}" bindtap="onTapMoreBefore">
+        <text>{{loadingMore ? '加载中……' : '加载更早的段落'}}</text>
+      </view>
+
+      <!-- 访谈/演讲转录稿：整篇一张卡，按文章排；说话人写在段首、加粗 -->
+      <view class="card article" id="article-card" wx:if="{{article}}">
+        <block wx:for="{{blocks}}" wx:key="id">
+          <view
+            class="block para {{item.isContext ? 'para-context' : 'para-owner'}} {{item.segmentId === hitSegmentId ? 'block-hit' : ''}}"
+            id="block-{{index}}"
+          >
+            <text class="prose"><text class="para-speaker">{{item.speakerLabel || '未署名'}}</text><text class="para-sep">：</text><text
+              wx:for="{{item.segs}}"
+              wx:for-item="seg"
+              wx:for-index="segIndex"
+              wx:key="segIndex"
+              class="{{seg.bold ? 'bd' : ''}}"
+            >{{seg.text}}</text></text>
+            <text class="warn" wx:for="{{item.defects}}" wx:key="*this">· {{item}}</text>
+          </view>
+        </block>
+      </view>
+
+      <!-- 博客/雪球/文章：一段一卡（问答、评论区靠卡片边界区分） -->
+      <block wx:else>
+        <block wx:for="{{blocks}}" wx:key="id">
+          <view
+            class="block card {{item.isContext ? 'block-context' : 'block-owner'}} {{item.segmentId === hitSegmentId ? 'block-hit' : ''}}"
+            id="block-{{index}}"
+          >
+            <view class="block-head">
+              <text class="block-speaker">{{item.speakerLabel || '未署名'}}</text>
+              <text class="block-time" wx:if="{{item.timeLabel}}">{{item.timeLabel}}</text>
+            </view>
+            <text class="prose"><text
+              wx:for="{{item.segs}}"
+              wx:for-item="seg"
+              wx:for-index="segIndex"
+              wx:key="segIndex"
+              class="{{seg.bold ? 'bd' : ''}}"
+            >{{seg.text}}</text></text>
+            <text class="warn" wx:for="{{item.defects}}" wx:key="*this">· {{item}}</text>
+          </view>
+        </block>
+      </block>
+
+      <view class="load-more" id="more-after" wx:if="{{hasMoreAfter}}" bindtap="onTapMoreAfter">
+        <text>{{loadingMore ? '加载中……' : '加载后续段落'}}</text>
+      </view>
+      <view class="end" id="reader-end" wx:if="{{isEnd}}"><text>全文结束</text></view>
+    </view>
+  </block>
+
+  <template is="back-to-top" wx:if="{{showToTop}}" />
+</view>

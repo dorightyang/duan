@@ -1,0 +1,16 @@
+{
+  "name": "duanyan-weapp",
+  "private": true,
+  "version": "0.1.0",
+  "description": "段言 — 把段永平（系）公开材料变成可搜索、可回原文的微信小程序",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "jest",
+    "check": "npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "miniprogram-api-typings": "^4.0.8",
+    "typescript": "^5.9.3"
+  }
+}

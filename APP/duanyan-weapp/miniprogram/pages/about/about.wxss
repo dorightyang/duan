@@ -1,0 +1,56 @@
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--s-3);
+}
+
+.logo { width: 128rpx; height: 128rpx; border-radius: 50%;  /* 资源本身就是正圆透明贴图，这里只是兜底 */ }
+
+.name {
+  margin-top: var(--s-2);
+  font-size: var(--fs-brand);
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 8rpx;
+}
+.sub { margin-top: var(--s-1); font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--text-2); }
+
+.block {
+  width: 100%;
+  margin-top: var(--s-4);
+  padding: var(--pad-card);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 标题独占一行：靠字号/字重/间距拉层级，不靠颜色 */
+.block-title {
+  display: block;
+  font-size: var(--fs-body);
+  line-height: var(--lh-title);
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.block-text {
+  display: block;
+  margin-top: var(--s-2);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-body);
+  color: var(--text-1);
+}
+
+.footnote {
+  margin-top: var(--s-6);
+  font-size: var(--fs-meta);
+  line-height: 1.7;
+  color: var(--text-4);
+  text-align: center;
+}
+
+.person { margin-top: var(--s-2); display: flex; justify-content: space-between; align-items: baseline; }
+.person-name { font-size: var(--fs-ui); color: var(--text-1); }
+.person-count { font-size: var(--fs-meta); color: var(--text-4); }

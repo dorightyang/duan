@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/search/search",
+    "pages/reader/reader",
+    "pages/topic/topic",
+    "pages/about/about"
+  ],
+  "window": {
+    "navigationBarTitleText": "段言",
+    "navigationBarBackgroundColor": "#0b1526",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0b1526",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,45 @@
+<import src="../../templates/back-to-top.wxml" />
+<view class="page">
+  <view class="loading" wx:if="{{loading}}">打开专题……</view>
+
+  <view class="empty" wx:if="{{!loading && error}}" id="topic-error">
+    <text>{{error}}</text>
+  </view>
+
+  <block wx:if="{{!loading && !error && topic}}">
+    <view class="head card">
+      <text class="head-title" id="topic-title">{{topic.title}}</text>
+      <text class="head-sub" id="topic-count">共 {{topic.itemCount}} 条原文 · 按人工顺序排列</text>
+      <text class="head-note">只收录、排序，不改写、不概括；每条都能回到原文。</text>
+    </view>
+
+    <view class="items">
+      <view
+        class="card item"
+        wx:for="{{items}}"
+        wx:key="id"
+        id="topic-item-{{index}}"
+        data-index="{{index}}"
+        bindtap="onTapItem"
+      >
+        <view class="item-head">
+          <text class="tag item-no">{{item.order + 1}}</text>
+          <text class="tag" wx:if="{{item.tierLabel}}">{{item.tierLabel}}</text>
+        </view>
+        <text class="prose"><text
+          wx:for="{{item.runs}}"
+          wx:for-item="seg"
+          wx:for-index="segIndex"
+          wx:key="segIndex"
+          class="{{seg.highlight ? 'hl' : ''}}{{seg.bold ? 'bd' : ''}}"
+        >{{seg.text}}</text></text>
+        <text class="meta item-meta">{{item.sourceLine}}</text>
+        <text class="item-title" wx:if="{{item.title}}">{{item.title}}</text>
+      </view>
+    </view>
+
+    <view class="end"><text>共 {{topic.itemCount}} 条</text></view>
+  </block>
+
+  <template is="back-to-top" wx:if="{{showToTop}}" />
+</view>

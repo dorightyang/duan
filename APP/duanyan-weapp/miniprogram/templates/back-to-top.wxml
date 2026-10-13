@@ -1,0 +1,18 @@
+<!-- 回到顶部：滚过一屏后出现在右下角，点一下回页顶。
+     搜索结果 / 原文 / 专题共用；显隐条件写在各页的 <template is> 上
+     （template 有自己的作用域，读不到页面 data）；样式在 app.wxss 的
+     .topper*，事件绑到各页的 toTop（实现见 utils/scroll.js）。 -->
+<template name="back-to-top">
+  <view
+    class="topper"
+    id="back-to-top"
+    bindtap="toTop"
+    hover-class="topper-hover"
+    hover-stay-time="80"
+  >
+    <view class="topper-ico">
+      <view class="topper-stem"></view>
+      <view class="topper-head"></view>
+    </view>
+  </view>
+</template>

@@ -1,0 +1,14 @@
+{
+  "appid": "wx681cfe30d1c0220a",
+  "projectname": "duanyan",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "miniprogram/",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": false,
+    "urlCheck": false,
+    "ignoreDevUnusedFiles": false
+  }
+}

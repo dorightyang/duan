@@ -1,0 +1,110 @@
+.searchbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  background: var(--card-2);
+  border: 1px solid var(--line-input);
+  border-radius: var(--radius-control);
+  padding: 0 var(--s-3);
+  height: var(--control-height);
+}
+
+.input { flex: 1; font-size: var(--fs-body); color: var(--text-1); }
+.ph { color: var(--text-4); }
+.clear { font-size: var(--fs-label); color: var(--text-2); padding-left: var(--s-2); }
+
+.notice { margin-top: var(--s-3); font-size: var(--fs-meta); line-height: 1.7; color: var(--text-4); }
+
+.topics { margin-bottom: var(--s-5); display: flex; flex-direction: column; }
+.topic-row {
+  margin-top: var(--s-2);
+  padding: var(--s-3) var(--pad-card);
+  display: flex;
+  flex-direction: column;
+}
+.topic-title { font-size: var(--fs-body); line-height: var(--lh-title); font-weight: 500; color: var(--text-1); }
+.topic-desc { margin-top: 6rpx; font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--text-4); }
+
+.hot { margin-top: var(--s-5); display: flex; flex-direction: column; }
+.hot-label { font-size: var(--fs-meta); color: var(--text-4); }
+.chips + .topic-row { margin-top: var(--s-4); }
+.chips { margin-top: var(--s-2); display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.chip {
+  padding: 10rpx 26rpx;
+  border-radius: var(--radius-tag);
+  border: 1px solid var(--line-chip);
+  color: var(--text-2);
+  font-size: var(--fs-label);
+}
+.chip-on { border-color: var(--gold); color: var(--gold); }
+
+/* 排序 / 发言人筛选：紧跟在检索模式下面，只在出结果后出现 */
+.filters { margin-top: var(--s-2); display: flex; flex-direction: column; gap: var(--s-1); }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+.filter-label { font-size: var(--fs-meta); color: var(--text-4); margin-right: 4rpx; }
+
+.more {
+  margin-top: var(--s-4);
+  text-align: center;
+  padding: var(--s-3);
+  border: 1px solid var(--line-chip);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-label);
+  color: var(--gold);
+}
+.more-note { margin-top: var(--s-3); text-align: center; padding: 0 var(--s-2); font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--text-4); }
+
+.summary { margin: var(--s-3) var(--s-1) var(--s-2); font-size: var(--fs-meta); color: var(--text-2); }
+.summary-note { color: var(--text-4); }
+.loading { margin-top: var(--s-6); text-align: center; color: var(--text-4); font-size: var(--fs-label); }
+
+.results { display: flex; flex-direction: column; gap: var(--card-gap); }
+.result { padding: var(--pad-card); display: flex; flex-direction: column; }
+.result-head { display: flex; gap: var(--s-2); margin-bottom: var(--s-2); }
+
+/* 正文（检索片段）最多 12 行。片段硬上限 800 字、一屏只放 220–270 字，
+   命中可以落在片段里的任何位置（用户 2026-10-11 截图：正文 2156px，一屏只有 753px，
+   要往下滚 2.3 屏才看到「陈明永」）。所以：
+   ① 命中靠后的片段在 utils/view.js 的 focusOnFirstHit 里已经把前面压成「…」，
+      保证命中落在前两行；② 这里再封顶 12 行，超出由系统在末行打省略号。
+   裁切放在**没有 padding** 的 .prose 上（父层 .result 有 padding）；
+   裁切层带 padding 时溢出行会从 padding 漏出来、被切成半截字（「上文」踩过这个坑）。 */
+.result .prose {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 12;
+  overflow: hidden;
+}
+
+/* 「上文」：他这条回答是针对谁说的。主要看的还是本人的回答，所以这里
+   字号比正文小一档、颜色弱一档，并限两行——提问原话普遍比回答长
+   （库里中位数 52 字 vs 28 字），不限行会把卡片撑爆。 */
+.q {
+  background: var(--card-2);
+  border-radius: var(--radius-tag);
+  padding: var(--s-2) var(--s-3);
+  margin-bottom: var(--s-3);
+}
+
+/* 限行必须放在**没有 padding** 的内层：裁切放在带 padding 的 .q 上时，
+   溢出行会从 padding 区域漏出来、被切成半截字（用户 2026-10-11 截图，已修）。
+   行数按用户 2026-10-11 的要求给到 3 行：超出的部分在末尾打省略号，
+   绝不把字切一半。 */
+.q-inner {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: var(--fs-meta);
+  line-height: var(--lh-meta);
+  overflow-wrap: break-word;
+}
+.q-label { color: var(--text-4); }
+.q-sep { color: var(--text-4); }
+.q-text { color: var(--text-2); }
+.hl { color: var(--gold); font-size: inherit; font-weight: inherit; }
+.result-meta { margin-top: var(--s-3); }
+.result-title { margin-top: 6rpx; font-size: var(--fs-meta); line-height: var(--lh-meta); color: var(--text-4); }
+.warn { margin-top: var(--s-1); font-size: var(--fs-meta); color: var(--warn); }
+
+.empty { margin-top: var(--s-8); text-align: center; font-size: var(--fs-label); color: var(--text-4); }
