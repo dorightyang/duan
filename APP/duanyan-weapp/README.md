@@ -39,7 +39,7 @@ duanyan-weapp/
 
 1. 微信开发者工具「导入项目」选本目录（`project.config.json` 在根）。
    AppID 属于原项目，fork 时请换成自己的（或先用「测试号」）。
-2. 编辑 `miniprogram/config.js`，填上自己的后端地址（以及后端要求的 token）。
+2. 编辑 `miniprogram/config.js`，填上后端地址（以及后端要求的 token）。
 3. 本地校验（不需要 IDE、不需要登录）：
 
    ```bash
@@ -49,8 +49,9 @@ duanyan-weapp/
 
 ## 说明
 
-- **只有小程序端**。检索后端不在本仓库；接口契约见 `miniprogram/utils/api.js`
-  （`/api/v1/retrieve/passages` 等），自己实现一套满足契约的后端即可。
+- **这里只有小程序端**，检索后端**后续开源**（同一套工程，开源后可直接自建）。
+  接口契约都在 `miniprogram/utils/api.js`（`/api/v1/retrieve/passages` 等），
+  在后端开源之前，把它指向你自己的服务即可。
 - **内容版权归原作者与原平台**。本仓库只做检索与呈现，正文逐字照录、不改写；
   转录稿未经逐字人工校对，可能有错漏，一切以原视频/原文为准。发现问题欢迎提 issue。
 - 展示层只做取舍、不改字：原文里的 `**强调**` 渲染成粗体，命中词只改颜色、不改字号。

@@ -21,7 +21,7 @@ toc: true
 [![段言：主页 / 搜索页 / 关于页](APP/duanyan-weapp/docs/screenshot.png)](APP/duanyan-weapp)
 
 把上面的材料变成**能搜、能看回原文**的微信小程序：逐字照录、每条带出处，点一下进原文页看上下文。
-源码在 [`APP/duanyan-weapp`](APP/duanyan-weapp)（只含小程序端，后端不在本仓库）。
+源码在 [`APP/duanyan-weapp`](APP/duanyan-weapp)（先放小程序端，检索后端后续开源）。
 
 三张图依次是：主页（每天一条原话）、搜索页（全文检索 + 命中高亮 + 发言人筛选）、关于页（收录范围与数据来源）。
 
